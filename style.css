@@ -1,0 +1,10 @@
+body { font-family: sans-serif; background-color: #f0f2f5; padding: 15px; }
+.container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+h2 { color: #1a73e8; text-align: center; margin-bottom: 20px; }
+h3 { color: #5f6368; border-left: 4px solid #1a73e8; padding-left: 10px; margin-top: 20px; }
+label { display: block; margin: 10px 0 5px; font-weight: bold; }
+input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+.grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+button { width: 100%; padding: 15px; margin-top: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.btn-guardar { background-color: #1a73e8; color: white; }
+.btn-ws { background-color: #25d366; color: white; }

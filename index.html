@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Inspección Profesional</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>INSPECCIÓN DE SEGURIDAD</h2>
+        
+        <label>Nombre del Agente:</label>
+        <input type="text" id="agente-nombre" placeholder="Nombre completo">
+
+        <hr>
+
+        <h3>1. Planta Eléctrica</h3>
+        <label>Estado General:</label>
+        <select id="planta-estado">
+            <option value="Operativa">Operativa</option>
+            <option value="Falla Menor">Falla Menor</option>
+            <option value="Fuera de Servicio">Fuera de Servicio</option>
+        </select>
+        <label>Nivel de Combustible (%):</label>
+        <input type="number" id="planta-nivel" placeholder="Ej: 80">
+
+        <h3>2. Conteo de Bombillos Fundidos</h3>
+        <div class="grid">
+            <div><label>Torre A:</label><input type="number" id="b-ta" value="0"></div>
+            <div><label>Torre B:</label><input type="number" id="b-tb" value="0"></div>
+            <div><label>Sótano:</label><input type="number" id="b-est" value="0"></div>
+        </div>
+
+        <h3>3. Observaciones del Recorrido</h3>
+        <textarea id="obs-recorrido" rows="4" placeholder="Describa novedades..."></textarea>
+
+        <button onclick="guardarInspeccion()" class="btn-guardar">💾 GUARDAR EN LA NUBE</button>
+        <button onclick="compartirWS()" class="btn-ws">📱 ENVIAR POR WHATSAPP</button>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
