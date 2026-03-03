@@ -8,150 +8,104 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* DISEÑO RESPONSIVO Y FONDO 8K */
         body { 
             font-family: 'Poppins', sans-serif; 
-            background: url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070') no-repeat center center fixed; 
-            background-size: cover;
+            background: #0a0f1d; 
             color: white; margin: 0; display: flex; justify-content: center;
         }
-        .main-container {
-            width: 100%; max-width: 500px; 
-            background-color: rgba(10, 15, 29, 0.97); 
-            min-height: 100vh; padding: 20px; box-shadow: 0 0 60px rgba(0,0,0,0.9);
-        }
-        .card-gold { background: linear-gradient(145deg, #1e293b, #0f172a); border-radius: 20px; border: 1px solid rgba(241, 196, 15, 0.1); margin-bottom: 12px; padding: 15px; }
-        
-        /* CÍRCULO ESPECIAL GUÁCHARO */
-        .circle-result { 
-            width: 55px; height: 55px; 
-            background: linear-gradient(135deg, #f97316, #ea580c); 
+        .main-container { width: 100%; max-width: 500px; min-height: 100vh; padding: 20px; background: rgba(15, 23, 42, 0.95); }
+        .card-gold { background: #1e293b; border-radius: 15px; padding: 15px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .circle-res { 
+            width: 50px; height: 50px; background: linear-gradient(135deg, #f97316, #ea580c); 
             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            color: white; font-weight: bold; font-size: 1.3rem; 
-            box-shadow: 0 0 20px rgba(234, 88, 12, 0.5);
-            border: 2px solid #fdba74;
+            font-weight: bold; font-size: 1.2rem; box-shadow: 0 0 15px rgba(234, 88, 12, 0.4);
         }
-        
-        .logo-box { background: #f1c40f; color: black; padding: 5px 12px; border-radius: 10px; font-weight: bold; font-size: 1.5rem; cursor: pointer; }
-        .live-pulse { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
-        
-        /* PANEL ADMIN OCULTO */
-        #admin-panel { display: none; background: #0f172a; padding: 20px; border-radius: 15px; border: 2px solid #f97316; margin-bottom: 20px; }
+        #admin-panel { display: none; background: #0f172a; padding: 15px; border: 2px solid #f97316; border-radius: 15px; margin-bottom: 20px; }
+        .logo-btn { background: #f1c40f; color: black; padding: 10px; border-radius: 10px; font-weight: bold; cursor: pointer; user-select: none; }
     </style>
 </head>
 <body>
 
 <div class="main-container">
-    <header class="flex justify-between items-center mb-4">
+    <header class="flex justify-between items-center mb-6">
         <div class="flex items-center gap-3">
-            <div id="logo-admin" class="logo-box" onclick="checkAdmin()">LF</div>
+            <div class="logo-btn" onclick="activarAdmin()">LF</div>
             <div>
-                <h1 class="text-3xl font-bold italic leading-none">LOTTO</h1>
-                <div class="flex items-center gap-1">
-                    <span class="live-pulse"></span>
-                    <span class="text-green-500 text-[10px] font-bold uppercase">Live</span>
-                    <span class="text-orange-500 text-xl font-bold italic ml-1">FLASH</span>
-                </div>
+                <h1 class="text-2xl font-bold italic">LOTTO <span class="text-orange-500">FLASH</span></h1>
+                <p class="text-green-500 text-[10px] font-bold uppercase tracking-widest">● En Vivo</p>
             </div>
         </div>
-        <div id="reloj" class="text-orange-500 font-bold text-xl">--:--:--</div>
+        <div id="reloj" class="text-orange-500 font-bold text-lg">00:00:00</div>
     </header>
 
-    <div class="flex justify-between items-center mb-6">
-        <p id="fecha-hoy" class="text-xl font-bold text-gray-400">--/--/----</p>
-        <div class="flex items-center gap-2 bg-gray-800 px-4 py-2 rounded-full cursor-pointer border border-white/5" onclick="darLike()">
-            <i id="heart-icon" class="fas fa-heart text-red-500"></i>
-            <span id="like-count" class="font-bold text-white text-sm">842</span>
+    <div class="flex justify-between items-center mb-4">
+        <div class="text-gray-400 font-bold" id="fecha">--/--/----</div>
+        <div class="bg-gray-800 px-4 py-1 rounded-full flex items-center gap-2 cursor-pointer" onclick="darLike()">
+            <i class="fas fa-heart text-red-500"></i>
+            <span id="likes">452</span>
         </div>
-    </div>
-
-    <div class="grid grid-cols-2 gap-3 mb-6">
-        <select id="loteria-view" class="bg-gray-800 text-white p-3 rounded-xl border border-orange-500 font-bold outline-none text-sm">
-            <option value="lotto">Lotto Activo</option>
-            <option value="granjita">La Granjita</option>
-            <option value="rey">Lotto Rey</option>
-            <option value="guacharo" selected>Guácharo Activo</option>
-        </select>
-        <input type="date" id="busqueda-fecha" class="bg-gray-800 text-white p-3 rounded-xl border border-orange-500 font-bold text-sm">
     </div>
 
     <div id="admin-panel">
-        <h3 class="text-center font-bold text-orange-500 mb-4 uppercase text-xs">Consola CarlosC</h3>
-        <select id="admin-hora" class="w-full p-3 rounded bg-gray-900 text-white mb-2">
+        <p class="text-center text-orange-500 font-bold mb-2">MODO ADMINISTRADOR</p>
+        <input type="text" id="input-res" placeholder="Resultado" class="w-full p-2 rounded bg-gray-700 mb-2 text-center uppercase font-bold">
+        <select id="input-hora" class="w-full p-2 rounded bg-gray-700 mb-2">
             <option value="08">08:00 AM</option><option value="09">09:00 AM</option>
-            <option value="10">10:00 AM</option><option value="11">11:00 AM</option>
-            <option value="12">12:00 PM</option><option value="01">01:00 PM</option>
-            <option value="04">04:00 PM</option><option value="05">05:00 PM</option>
-            <option value="06">06:00 PM</option><option value="07">07:00 PM</option>
+            <option value="10">10:00 AM</option><option value="01">01:00 PM</option>
+            <option value="04">04:00 PM</option><option value="07">07:00 PM</option>
         </select>
-        <input type="text" id="admin-res" placeholder="Resultado (Ej: 40 o ALACRÁN)" class="w-full p-3 rounded bg-gray-900 text-white text-center font-bold mb-2 uppercase">
-        <button onclick="publicar()" class="w-full bg-orange-600 text-white font-bold py-3 rounded-lg">PUBLICAR</button>
+        <button onclick="subir()" class="w-full bg-orange-600 py-2 rounded font-bold">PUBLICAR</button>
     </div>
 
-    <div id="lista-resultados" class="space-y-3"></div>
-
-    <div class="mt-10 text-center pb-12">
-        <button class="bg-yellow-600 text-white w-full py-4 rounded-full font-bold mb-6 italic">
-            <i class="fas fa-share-alt mr-2"></i> COMPARTIR APP
-        </button>
-        <p class="text-[9px] text-gray-600 tracking-[8px]">DISEÑO POR</p>
-        <h2 class="text-2xl font-bold tracking-widest text-white">CARLOSC</h2>
-    </div>
+    <div id="lista" class="space-y-3">
+        </div>
 </div>
 
 <script>
-    // 1. Reloj y Fecha
-    function clock() {
+    // Reloj y Fecha
+    setInterval(() => {
         const d = new Date();
         document.getElementById('reloj').innerText = d.toLocaleTimeString();
-        document.getElementById('fecha-hoy').innerText = d.toLocaleDateString();
-    }
-    setInterval(clock, 1000); clock();
+        document.getElementById('fecha').innerText = d.toLocaleDateString();
+    }, 1000);
 
-    // 2. Generar Horarios (8am a 7pm)
+    // Generar Lista
     const horas = ["08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM"];
-    const lista = document.getElementById('lista-resultados');
+    const lista = document.getElementById('lista');
     horas.forEach(h => {
         const id = h.split(':')[0];
         lista.innerHTML += `
             <div class="card-gold flex justify-between items-center">
-                <div><p class="text-[10px] text-gray-500 font-bold uppercase">Sorteo</p><h3 class="text-lg font-bold">${h}</h3></div>
-                <div class="flex items-center gap-4">
-                    <span class="text-orange-500 font-bold text-[11px]" id="txt-${id}">ESPERANDO...</span>
-                    <div id="val-${id}" class="circle-result">--</div>
-                    <i class="fab fa-whatsapp text-green-500 text-xl cursor-pointer"></i>
+                <span class="font-bold text-gray-400">${h}</span>
+                <div class="flex items-center gap-3">
+                    <div id="res-${id}" class="circle-res">--</div>
+                    <i class="fab fa-whatsapp text-green-500 text-xl"></i>
                 </div>
             </div>`;
     });
 
-    // 3. Admin Secreto (Tocar 3 veces el logo LF)
-    let clicks = 0;
-    function checkAdmin() {
-        clicks++;
-        if(clicks === 3) {
-            const p = prompt("Clave CarlosC:");
-            if(p === "19Bc*.Ks*9") document.getElementById('admin-panel').style.display = 'block';
-            clicks = 0;
+    // Función Admin con contador visual en consola para probar
+    let toques = 0;
+    function activarAdmin() {
+        toques++;
+        if (toques === 3) {
+            let p = prompt("Introduce Clave CarlosC:");
+            if (p === "19Bc*.Ks*9") {
+                document.getElementById('admin-panel').style.display = 'block';
+            }
+            toques = 0;
         }
     }
 
-    // 4. Publicar Resultado
-    function publicar() {
-        const h = document.getElementById('admin-hora').value;
-        const r = document.getElementById('admin-res').value;
-        if(r) {
-            document.getElementById('val-'+h).innerText = r;
-            document.getElementById('txt-'+h).innerText = "SORTEO OK";
-            document.getElementById('admin-res').value = "";
-        }
+    function subir() {
+        const h = document.getElementById('input-hora').value;
+        const r = document.getElementById('input-res').value;
+        if(r) document.getElementById('res-'+h).innerText = r;
     }
 
-    // 5. Sistema de Likes
     function darLike() {
-        let count = parseInt(document.getElementById('like-count').innerText);
-        document.getElementById('like-count').innerText = count + 1;
-        document.getElementById('heart-icon').classList.toggle('fas');
+        let n = parseInt(document.getElementById('likes').innerText);
+        document.getElementById('likes').innerText = n + 1;
     }
 </script>
 </body>
