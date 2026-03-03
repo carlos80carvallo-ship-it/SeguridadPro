@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lotto Flash - Guácharo Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #070b14; color: white; font-family: sans-serif; display: flex; justify-content: center; margin: 0; }
+        .container { width: 100%; max-width: 480px; background: #0f172a; min-height: 100vh; padding: 20px; }
+        .guacharo-card { background: linear-gradient(145deg, #1e293b, #0f172a); border-radius: 20px; padding: 15px; margin-bottom: 12px; border: 1px solid #f97316; display: flex; justify-content: space-between; align-items: center; }
+        .ball-orange { width: 55px; height: 55px; background: linear-gradient(135deg, #f97316, #ea580c); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.3rem; border: 2px solid #fdba74; box-shadow: 0 0 15px rgba(234, 88, 12, 0.4); }
+        .admin-zone { background: #1a1a1a; padding: 15px; border: 2px solid #f1c40f; border-radius: 15px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold italic">LOTTO <span class="text-orange-500">FLASH</span></h1>
+            <div id="reloj" class="text-orange-500 font-bold text-xl">00:00:00</div>
+        </div>
+
+        <div class="admin-zone">
+            <p class="text-center text-yellow-500 font-bold mb-3">PANEL DE PUBLICACIÓN</p>
+            <input type="text" id="num" placeholder="Número" class="w-full p-3 rounded mb-2 text-black text-center font-bold uppercase">
+            <button onclick="enviar()" class="w-full bg-orange-600 py-3 rounded-lg font-bold">PUBLICAR EN 09:00 AM</button>
+        </div>
+
+        <div id="sorteos">
+            <div class="guacharo-card">
+                <div><p class="text-[10px] text-gray-500 font-bold">HORARIO</p><p class="text-lg font-bold">09:00 AM</p></div>
+                <div class="flex items-center gap-4">
+                    <span id="st-09" class="text-orange-500 font-bold text-xs">ESPERANDO</span>
+                    <div id="res-09" class="ball-orange">--</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        setInterval(() => { document.getElementById('reloj').innerText = new Date().toLocaleTimeString(); }, 1000);
+        function enviar() {
+            let n = document.getElementById('num').value;
+            if(n) {
+                document.getElementById('res-09').innerText = n;
+                document.getElementById('st-09').innerText = "CONFIRMADO";
+                document.getElementById('num').value = "";
+            }
+        }
+    </script>
+</body>
+</html>
