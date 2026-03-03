@@ -3,44 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lotto Flash - CarlosC</title>
+    <title>Lotto Flash Pro - CarlosC</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; background: #0a0f1d; color: white; display: flex; justify-content: center; margin: 0; }
-        .app-container { width: 100%; max-width: 450px; background: #0f172a; min-height: 100vh; padding: 20px; }
-        .card { background: #1e293b; border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .circle { width: 45px; height: 45px; background: #ea580c; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .btn-admin { background: #f1c40f; color: black; font-weight: bold; padding: 10px; width: 100%; border-radius: 10px; margin-top: 10px; }
+        body { font-family: sans-serif; background: #0a1128; color: white; margin: 0; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; background: #001f3f; min-height: 100vh; padding: 20px; }
+        .card { background: #003366; border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #004080; }
+        .ball { width: 50px; height: 50px; background: #ff4500; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; box-shadow: 0 0 15px #ff4500; }
+        .admin-box { background: #1a1a1a; padding: 15px; border: 2px solid #ffcc00; border-radius: 15px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
-    <div class="app-container">
+    <div class="container">
         <div class="flex justify-between items-center mb-6">
-            <div class="text-2xl font-bold text-yellow-500">LF</div>
-            <div id="reloj" class="text-xl font-mono">00:00:00</div>
+            <h1 class="text-3xl font-bold italic text-white">LOTTO <span class="text-yellow-500">FLASH</span></h1>
+            <div id="reloj" class="text-yellow-500 font-bold text-xl">00:00:00</div>
         </div>
 
-        <div class="flex justify-between items-center mb-6 bg-gray-800 p-3 rounded-xl">
-            <span class="text-gray-400 font-bold">3/3/2026</span>
-            <button onclick="darLike()" class="flex items-center gap-2">
+        <div class="flex justify-between items-center mb-6 bg-black/30 p-3 rounded-xl">
+            <span class="font-bold text-gray-300">3 de Marzo, 2026</span>
+            <div onclick="darLike()" class="flex items-center gap-2 cursor-pointer bg-gray-800 px-4 py-1 rounded-full">
                 <i class="fas fa-heart text-red-500"></i>
-                <span id="contador">450</span>
-            </button>
+                <span id="like-count">850</span>
+            </div>
         </div>
 
-        <div class="bg-gray-900 p-4 rounded-xl border-2 border-orange-500 mb-6">
-            <p class="text-orange-500 font-bold text-center mb-2">PANEL CARLOSC</p>
-            <input type="text" id="res-val" placeholder="Número" class="w-full p-2 rounded mb-2 text-black">
-            <button onclick="actualizar()" class="btn-admin">PUBLICAR RESULTADO</button>
+        <div class="admin-box">
+            <p class="text-center text-yellow-500 font-bold mb-3">PANEL DE CONTROL CARLOSC</p>
+            <input type="text" id="nuevo-valor" placeholder="Número o Animal" class="w-full p-3 rounded mb-2 text-black font-bold text-center uppercase">
+            <button onclick="publicar()" class="w-full bg-yellow-500 text-black font-bold py-3 rounded-lg">PUBLICAR AHORA</button>
         </div>
 
-        <div id="lista-sorteos">
+        <div id="lista">
             <div class="card">
-                <span>08:00 AM</span>
-                <div class="flex items-center gap-3">
-                    <span id="txt-08" class="text-xs text-orange-500">ESPERANDO</span>
-                    <div id="ball-08" class="circle">--</div>
+                <div><p class="text-[10px] text-gray-400">SORTEO</p><p class="font-bold text-lg">08:00 AM</p></div>
+                <div class="flex items-center gap-4">
+                    <span id="status-08" class="text-orange-500 font-bold text-xs animate-pulse">ESPERANDO</span>
+                    <div id="res-08" class="ball">--</div>
+                    <i class="fab fa-whatsapp text-green-500 text-xl"></i>
                 </div>
             </div>
             </div>
@@ -52,18 +53,20 @@
             document.getElementById('reloj').innerText = new Date().toLocaleTimeString();
         }, 1000);
 
-        // Función de Like
+        // Likes
         function darLike() {
-            let c = document.getElementById('contador');
+            let c = document.getElementById('like-count');
             c.innerText = parseInt(c.innerText) + 1;
         }
 
-        // Función Publicar
-        function actualizar() {
-            let val = document.getElementById('res-val').value;
-            if(val) {
-                document.getElementById('ball-08').innerText = val;
-                document.getElementById('txt-08').innerText = "OK";
+        // Publicar (Prueba con las 08:00 AM)
+        function publicar() {
+            let v = document.getElementById('nuevo-valor').value;
+            if(v) {
+                document.getElementById('res-08').innerText = v;
+                document.getElementById('status-08').innerText = "CONFIRMADO";
+                document.getElementById('status-08').classList.remove('animate-pulse');
+                document.getElementById('nuevo-valor').value = "";
             }
         }
     </script>
