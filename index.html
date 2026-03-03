@@ -2,52 +2,136 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lotto Flash - Guácharo Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lotto Flash Pro - CarlosC</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        body { background: #070b14; color: white; font-family: sans-serif; display: flex; justify-content: center; margin: 0; }
-        .container { width: 100%; max-width: 480px; background: #0f172a; min-height: 100vh; padding: 20px; }
-        .guacharo-card { background: linear-gradient(145deg, #1e293b, #0f172a); border-radius: 20px; padding: 15px; margin-bottom: 12px; border: 1px solid #f97316; display: flex; justify-content: space-between; align-items: center; }
-        .ball-orange { width: 55px; height: 55px; background: linear-gradient(135deg, #f97316, #ea580c); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.3rem; border: 2px solid #fdba74; box-shadow: 0 0 15px rgba(234, 88, 12, 0.4); }
-        .admin-zone { background: #1a1a1a; padding: 15px; border: 2px solid #f1c40f; border-radius: 15px; margin-bottom: 20px; }
+        :root { --oro: #fdbb2d; --azul-glow: #1a3a5a; --ws: #25d366; }
+        body { margin: 0; background: #000; color: white; font-family: 'Segoe UI', sans-serif; }
+        .glass-bg { position: fixed; inset: 0; background: radial-gradient(circle at 50% 0%, var(--azul-glow) 0%, #000 85%); z-index: -1; }
+        .logo-badge { background: var(--oro); color: #000; padding: 8px 12px; border-radius: 10px; font-weight: 900; cursor: pointer; }
+        .fila-res { background: rgba(255,255,255,0.05); margin-bottom: 10px; padding: 15px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
+        .circulo-num { background: radial-gradient(circle, #fdbb2d, #b37a00); width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 1.4rem; box-shadow: 0 0 15px rgba(253,187,45,0.6); }
+        .modal-admin { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(10px); }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold italic">LOTTO <span class="text-orange-500">FLASH</span></h1>
-            <div id="reloj" class="text-orange-500 font-bold text-xl">00:00:00</div>
+    <div class="glass-bg"></div>
+    <div class="max-w-[450px] mx-auto p-4">
+        
+        <header class="flex justify-between items-center mb-6">
+            <div onclick="abrirAdmin()">
+                <div class="logo-badge">LF</div>
+                <div class="flex items-center gap-1 mt-1 text-[10px] text-green-400 font-bold">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> LIVE
+                </div>
+            </div>
+            <div class="text-center">
+                <h1 class="text-2xl font-black italic">LOTTO <span class="text-[#fdbb2d]">FLASH</span></h1>
+                <div id="fecha" class="text-xs font-bold text-gray-400">03/03/2026</div>
+            </div>
+            <div id="reloj" class="text-[#fdbb2d] font-mono text-lg font-bold">00:00:00</div>
+        </header>
+
+        <div id="listado" class="space-y-3">
+            </div>
+
+        <div class="text-center mt-8">
+            <button onclick="sumarLike()" class="bg-[#fdbb2d] text-black font-black py-4 px-8 rounded-full shadow-lg active:scale-95 transition-transform">
+                ❤️ APOYAR APP
+            </button>
+            <p id="contador-likes" class="text-xs mt-3 text-gray-400 font-bold">1920 personas apoyan esta innovación</p>
         </div>
 
-        <div class="admin-zone">
-            <p class="text-center text-yellow-500 font-bold mb-3">PANEL DE PUBLICACIÓN</p>
-            <input type="text" id="num" placeholder="Número" class="w-full p-3 rounded mb-2 text-black text-center font-bold uppercase">
-            <button onclick="enviar()" class="w-full bg-orange-600 py-3 rounded-lg font-bold">PUBLICAR EN 09:00 AM</button>
-        </div>
-
-        <div id="sorteos">
-            <div class="guacharo-card">
-                <div><p class="text-[10px] text-gray-500 font-bold">HORARIO</p><p class="text-lg font-bold">09:00 AM</p></div>
-                <div class="flex items-center gap-4">
-                    <span id="st-09" class="text-orange-500 font-bold text-xs">ESPERANDO</span>
-                    <div id="res-09" class="ball-orange">--</div>
+        <div id="panelAdmin" class="modal-admin">
+            <div class="bg-[#111] border-2 border-[#fdbb2d] w-[90%] rounded-[30px] p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="font-black text-sm">ADMINISTRACIÓN CARLOS C</span>
+                    <button onclick="cerrarAdmin()" class="text-2xl">&times;</button>
+                </div>
+                <div class="space-y-4">
+                    <select id="adm-hora" class="w-full p-3 bg-gray-800 rounded-xl"></select>
+                    <input type="text" id="adm-num" placeholder="Ej: 75" maxlength="2" class="w-full p-3 bg-gray-800 rounded-xl text-center text-2xl font-bold" oninput="preview()">
+                    <div id="preview-name" class="text-center text-[#fdbb2d] font-bold text-xl uppercase">---</div>
+                    <button onclick="publicar()" class="w-full bg-[#fdbb2d] text-black font-black py-4 rounded-xl">🚀 SUBIR RESULTADO</button>
                 </div>
             </div>
         </div>
+
+        <footer class="text-center mt-12 opacity-50">
+            <p class="text-[10px]">DISEÑADO POR</p>
+            <h3 class="text-2xl font-black tracking-tighter">CarlosC</h3>
+        </footer>
     </div>
 
     <script>
-        setInterval(() => { document.getElementById('reloj').innerText = new Date().toLocaleTimeString(); }, 1000);
-        function enviar() {
-            let n = document.getElementById('num').value;
-            if(n) {
-                document.getElementById('res-09').innerText = n;
-                document.getElementById('st-09').innerText = "CONFIRMADO";
-                document.getElementById('num').value = "";
-            }
+        const ANIMALES = {"00":"Ballena","0":"Delfín","01":"Carnero","02":"Toro","03":"Ciempiés","04":"Alacrán","05":"León","06":"Rana","07":"Perico","08":"Ratón","09":"Águila","10":"Tigre","11":"Gato","12":"Caballo","13":"Mono","14":"Paloma","15":"Zorro","16":"Oso","17":"Pavo","18":"Burro","19":"Chivo","20":"Cochino","21":"Gallo","22":"Camello","23":"Cebra","24":"Iguana","25":"Gallina","26":"Vaca","27":"Perro","28":"Zamuro","29":"Elefante","30":"Caimán","31":"Lapa","32":"Ardilla","33":"Pescado","34":"Venado","35":"Jirafa","36":"Culebra","37":"Tortuga","38":"Búfalo","39":"Lechuza","40":"Avispa","41":"Canguro","42":"Tucán","43":"Mariposa","44":"Chigüire","45":"Garza","46":"Puma","47":"Pavo Real","48":"Puercoespín","49":"Pereza","50":"Canario","51":"Pelícano","52":"Pulpo","53":"Caracol","54":"Grillo","55":"Oso Hormiguero","56":"Tiburón","57":"Pato","58":"Hormiga","59":"Pantera","60":"Camaleón","61":"Panda","62":"Cachicamo","63":"Cangrejo","64":"Gavilán","65":"Araña","66":"Lobo","67":"Avestruz","68":"Jaguar","69":"Conejo","70":"Bisonte","71":"Guacamaya","72":"Gorila","73":"Hipopótamo","74":"Turpial","75":"Guácharo"};
+        const HORAS = ["08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "04:00 PM", "07:00 PM"];
+        let likes = 1920;
+        let db = JSON.parse(localStorage.getItem('CarlosC_V2026')) || {};
+
+        function render() {
+            const list = document.getElementById('listado');
+            list.innerHTML = "";
+            HORAS.forEach(h => {
+                const r = db[h] || { n: "--", a: "ESPERANDO..." };
+                list.innerHTML += `
+                <div class="fila-res">
+                    <div><small class="text-gray-500 font-bold text-[10px]">HORARIO</small><br><b class="text-lg">${h}</b></div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-[#fdbb2d] font-black text-sm uppercase">${r.a}</span>
+                        <div class="circulo-num">${r.n}</div>
+                    </div>
+                </div>`;
+            });
         }
+
+        let toques = 0;
+        function abrirAdmin() {
+            toques++;
+            if(toques === 3) {
+                let p = prompt("CLAVE DE ACCESO:");
+                if(p === "19Bc*.Ks*9") {
+                    document.getElementById('panelAdmin').style.display = 'flex';
+                    const hSelect = document.getElementById('adm-hora');
+                    hSelect.innerHTML = "";
+                    HORAS.forEach(hora => hSelect.add(new Option(hora, hora)));
+                }
+                toques = 0;
+            }
+            setTimeout(() => toques = 0, 2000);
+        }
+
+        function preview() {
+            let n = document.getElementById('adm-num').value;
+            if(n.length === 1 && n !== "0") n = "0" + n;
+            document.getElementById('preview-name').innerText = ANIMALES[n] || "---";
+        }
+
+        function publicar() {
+            const h = document.getElementById('adm-hora').value;
+            let n = document.getElementById('adm-num').value;
+            if(n.length === 1 && n !== "0") n = "0" + n;
+            if(!ANIMALES[n]) return alert("Código Inválido");
+            db[h] = { n: n, a: ANIMALES[n] };
+            localStorage.setItem('CarlosC_V2026', JSON.stringify(db));
+            render();
+            cerrarAdmin();
+        }
+
+        function cerrarAdmin() { document.getElementById('panelAdmin').style.display = 'none'; }
+        function sumarLike() {
+            likes++;
+            document.getElementById('contador-likes').innerText = `${likes} personas apoyan esta innovación`;
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#fdbb2d', '#ffffff'] });
+        }
+
+        window.onload = () => {
+            render();
+            setInterval(() => { document.getElementById('reloj').innerText = new Date().toLocaleTimeString(); }, 1000);
+        };
     </script>
 </body>
 </html>
