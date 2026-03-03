@@ -3,42 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Inspección Profesional</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Lotto Flash Pro - CarlosC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* FONDO 8K PARA PC Y AJUSTE DE CONTENEDOR */
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=2564') no-repeat center center fixed; 
+            background-size: cover;
+            color: white; 
+            margin: 0; 
+            display: flex;
+            justify-content: center;
+        }
+        .main-container {
+            width: 100%;
+            max-width: 500px; /* Tamaño ideal tipo App en cualquier pantalla */
+            background-color: rgba(10, 15, 29, 0.95); /* Fondo oscuro semitransparente */
+            min-height: 100vh;
+            padding: 20px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+        .card-gold { background: linear-gradient(145deg, #16213e, #0f172a); border-radius: 20px; border: 1px solid rgba(255, 215, 0, 0.1); margin-bottom: 12px; padding: 15px; transition: 0.3s; }
+        .card-gold:hover { border-color: #f1c40f; }
+        .circle-result { width: 45px; height: 45px; background: #f1c40f; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 1.1rem; box-shadow: 0 0 15px rgba(241, 196, 15, 0.3); }
+        .logo-box { background: #f1c40f; color: black; padding: 5px 12px; border-radius: 10px; font-weight: bold; font-size: 1.5rem; cursor: pointer; }
+        .live-pulse { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
+        
+        /* BOTÓN DE LIKE */
+        .like-btn { cursor: pointer; transition: transform 0.2s; }
+        .like-btn:active { transform: scale(1.3); }
+        
+        /* OCULTAR PANEL ADMIN */
+        #admin-panel { display: none; background: #1a202c; padding: 20px; border-radius: 15px; border: 2px solid #f1c40f; margin-bottom: 20px; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2>INSPECCIÓN DE SEGURIDAD</h2>
-        
-        <label>Nombre del Agente:</label>
-        <input type="text" id="agente-nombre" placeholder="Nombre completo">
 
-        <hr>
-
-        <h3>1. Planta Eléctrica</h3>
-        <label>Estado General:</label>
-        <select id="planta-estado">
-            <option value="Operativa">Operativa</option>
-            <option value="Falla Menor">Falla Menor</option>
-            <option value="Fuera de Servicio">Fuera de Servicio</option>
-        </select>
-        <label>Nivel de Combustible (%):</label>
-        <input type="number" id="planta-nivel" placeholder="Ej: 80">
-
-        <h3>2. Conteo de Bombillos Fundidos</h3>
-        <div class="grid">
-            <div><label>Torre A:</label><input type="number" id="b-ta" value="0"></div>
-            <div><label>Torre B:</label><input type="number" id="b-tb" value="0"></div>
-            <div><label>Sótano:</label><input type="number" id="b-est" value="0"></div>
+<div class="main-container">
+    <header class="flex justify-between items-center mb-4">
+        <div class="flex items-center gap-3">
+            <div class="logo-box" onclick="checkAdmin()">LF</div>
+            <div>
+                <h1 class="text-3xl font-bold italic leading-none">LOTTO</h1>
+                <div class="flex items-center gap-1">
+                    <span class="live-pulse"></span>
+                    <span class="text-green-500 text-xs font-bold uppercase tracking-widest">Live</span>
+                    <span class="text-yellow-500 text-xl font-bold italic ml-1">FLASH</span>
+                </div>
+            </div>
         </div>
+        <div id="reloj" class="text-yellow-500 font-bold text-xl">--:--:--</div>
+    </header>
 
-        <h3>3. Observaciones del Recorrido</h3>
-        <textarea id="obs-recorrido" rows="4" placeholder="Describa novedades..."></textarea>
-
-        <button onclick="guardarInspeccion()" class="btn-guardar">💾 GUARDAR EN LA NUBE</button>
-        <button onclick="compartirWS()" class="btn-ws">📱 ENVIAR POR WHATSAPP</button>
+    <div class="flex justify-between items-center mb-6">
+        <p id="fecha-hoy" class="text-2xl font-bold text-gray-400">--/--/----</p>
+        <div class="flex items-center gap-2 bg-gray-800 px-3 py-1 rounded-full like-btn" onclick="darLike()">
+            <i id="heart-icon" class="far fa-heart text-red-500"></i>
+            <span id="like-count" class="font-bold">124</span>
+        </div>
     </div>
 
-    <script type="module" src="script.js"></script>
+    <div class="grid grid-cols-2 gap-2 mb-6">
+        <select id="loteria-select" class="bg-gray-800 text-white p-3 rounded-lg border border-yellow-500 font-bold outline-none" onchange="cambiarLoteria()">
+            <option value="lotto">Lotto Activo</option>
+            <option value="granjita">La Granjita</option>
+            <option value="rey">Lotto Rey</option>
+            <option value="guacharo">Guácharo Activo</option>
+        </select>
+        <input type="date" id="busqueda-fecha" class="bg-gray-800 text-white p-3 rounded-lg border border-yellow-500 font-bold outline-none">
+    </div>
+
+    <div id="admin-panel">
+        <h3 class="text-center font-bold text-yellow-500 mb-2 uppercase">Panel de Control CarlosC</h3>
+        <input type="text" id="res-val" placeholder="Resultado" class="w-full p-2 mb-2 rounded bg-gray-700 text-white text-center">
+        <select id="hora-pub" class="w-full p-2 mb-2 rounded bg-gray-700 text-white text-center">
+            <option value="08">08:00 AM</option><option value="09">09:00 AM</option>
+            <option value="10">10:00 AM</option><option value="11">11:00 AM</option>
+            <option value="12">12:00 PM</option><option value="01">01:00 PM</option>
+            <option value="04">04:00 PM</option><option value="05">05:00 PM</option>
+            <option value="06">06:00 PM</option><option value="07">07:00 PM</option>
+        </select>
+        <button onclick="publicar()" class="w-full bg-green-500 text-black font-bold py-2 rounded">SUBIR RESULTADO</button>
+    </div>
+
+    <div id="lista-resultados" class="space-y-3">
+        </div>
+
+    <div class="mt-8 text-center pb-10">
+        <button class="bg-yellow-600 text-white w-full py-4 rounded-full font-bold mb-4 italic flex items-center justify-center gap-2">
+            <i class="fas fa-share-alt"></i> COMPARTIR APP
+        </button>
+        <p class="text-[10px] text-gray-500">DISEÑO POR</p>
+        <h2 class="text-2xl font-bold tracking-widest uppercase">CarlosC</h2>
+    </div>
+</div>
+
+<script>
+    // 1. Reloj y Fecha
+    function update() {
+        const d = new Date();
+        document.getElementById('reloj').innerText = d.toLocaleTimeString();
+        document.getElementById('fecha-hoy').innerText = d.toLocaleDateString();
+    }
+    setInterval(update, 1000); update();
+
+    // 2. Generar Tabla
+    const horas = ["08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM"];
+    const container = document.getElementById('lista-resultados');
+    horas.forEach(h => {
+        const id = h.split(':')[0];
+        container.innerHTML += `
+            <div class="card-gold flex justify-between items-center">
+                <div><p class="text-[10px] text-gray-500 uppercase">Horario</p><h3 class="text-lg font-bold">${h}</h3></div>
+                <div class="flex items-center gap-3">
+                    <span class="text-yellow-500 font-bold text-xs" id="name-${id}">ESPERANDO...</span>
+                    <div id="res-${id}" class="circle-result">--</div>
+                    <a href="https://wa.me/?text=Resultado+Lotto+Flash+${h}" target="_blank">
+                        <i class="fab fa-whatsapp text-green-500 text-xl"></i>
+                    </a>
+                </div>
+            </div>`;
+    });
+
+    // 3. Sistema de Likes
+    let likes = 124;
+    function darLike() {
+        likes++;
+        document.getElementById('like-count').innerText = likes;
+        document.getElementById('heart-icon').className = "fas fa-heart text-red-500 animate-bounce";
+    }
+
+    // 4. Admin Secreto (Tocar 3 veces el logo LF)
+    let clicks = 0;
+    function checkAdmin() {
+        clicks++;
+        if (clicks === 3) {
+            const pass = prompt("Introduce tu clave maestra:");
+            if (pass === "19Bc*.Ks*9") {
+                document.getElementById('admin-panel').style.display = 'block';
+                alert("Acceso CarlosC activado");
+            }
+            clicks = 0;
+        }
+    }
+
+    function cambiarLoteria() {
+        alert("Cambiando a " + document.getElementById('loteria-select').value);
+        // Aquí conectaremos la base de datos para filtrar por lotería
+    }
+</script>
 </body>
 </html>
